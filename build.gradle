@@ -3,13 +3,11 @@ plugins {
 }
 
 group = 'com.transactions'
-version = '1.0-SNAPSHOT'
+version = '1.0'
 
-//jar {
-//    manifest {
-//        attributes 'Main-Class': 'application.Application'
-//    }
-//}
+// disable jar for root project
+jar.enabled = false
+build.enabled = false
 
 allprojects {
     java {
