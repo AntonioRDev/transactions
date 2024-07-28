@@ -1,0 +1,4 @@
+rootProject.name = 'transactions'
+include 'app'
+include 'domain'
+

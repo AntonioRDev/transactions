@@ -1,0 +1,24 @@
+plugins {
+    id 'java'
+}
+
+group = 'com.transactions'
+version = '1.0-SNAPSHOT'
+
+//jar {
+//    manifest {
+//        attributes 'Main-Class': 'application.Application'
+//    }
+//}
+
+allprojects {
+    java {
+        toolchain {
+            languageVersion = JavaLanguageVersion.of(22)
+        }
+    }
+
+    repositories {
+        mavenCentral()
+    }
+}
