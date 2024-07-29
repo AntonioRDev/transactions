@@ -2,15 +2,15 @@ plugins {
     id 'java'
 }
 
-group = 'com.transactions'
-version = '1.0-SNAPSHOT'
-
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    testImplementation platform('org.junit:junit-bom:5.10.0')
+    // DI specification
+    implementation 'jakarta.inject:jakarta.inject-api:2.0.1'
+
+    testImplementation platform('org.junit:junit-bom:5.10.3')
     testImplementation 'org.junit.jupiter:junit-jupiter'
 }
 
