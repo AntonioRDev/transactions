@@ -11,9 +11,14 @@ configurations {
 }
 
 dependencies {
+    // Domain
     implementation project(':domain')
 
+    // Spring Web
     implementation 'org.springframework.boot:spring-boot-starter-web'
+
+    // Swagger
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0'
 
     // Tests
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
