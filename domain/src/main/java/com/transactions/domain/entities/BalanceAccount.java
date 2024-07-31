@@ -6,5 +6,6 @@ public record BalanceAccount(
     String id,
     String accountId,
     BalanceCategory category,
-    Integer balanceCents
+    Integer balanceCents,
+    Integer lockVersion
 ) {}

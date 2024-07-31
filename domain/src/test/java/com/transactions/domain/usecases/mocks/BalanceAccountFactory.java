@@ -9,7 +9,8 @@ public class BalanceAccountFactory {
                 "balanceAccountId",
                 "accountId",
                 BalanceCategory.FOOD,
-                balanceCents
+                balanceCents,
+                0
         );
     }
 
@@ -18,7 +19,8 @@ public class BalanceAccountFactory {
                 "balanceAccountId",
                 "accountId",
                 BalanceCategory.MEAL,
-                balanceCents
+                balanceCents,
+                0
         );
     }
 
@@ -27,7 +29,8 @@ public class BalanceAccountFactory {
                 "balanceAccountId",
                 "accountId",
                 BalanceCategory.CASH,
-                balanceCents
+                balanceCents,
+                0
         );
     }
 }

@@ -31,5 +31,6 @@ CREATE TABLE IF NOT EXISTS BalanceAccount (
     accountId UUID NOT NULL,
     category TEXT NOT NULL,
     balanceCents INT NOT NULL,
+    lockVersion INT DEFAULT 0 NOT NULL,
     FOREIGN KEY (accountId) REFERENCES Account(id)
 );

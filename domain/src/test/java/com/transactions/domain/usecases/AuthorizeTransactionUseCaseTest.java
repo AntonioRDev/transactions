@@ -3,6 +3,7 @@ package com.transactions.domain.usecases;
 import com.transactions.domain.entities.enums.BalanceCategory;
 import com.transactions.domain.exceptions.AccountNotFoundException;
 import com.transactions.domain.exceptions.BalanceAccountNotFoundException;
+import com.transactions.domain.exceptions.ConcurrencyException;
 import com.transactions.domain.exceptions.InsufficientBalanceException;
 import com.transactions.domain.ports.AccountRepository;
 import com.transactions.domain.ports.MerchantRepository;
@@ -166,10 +167,26 @@ class AuthorizeTransactionUseCaseTest {
         when(accountRepository.getBalanceAccountByCategoryAndAccount(any(), any()))
                 .thenReturn(Optional.of(foodBalanceAccount));
         doNothing().when(transactionRepository).createTransaction(any());
+        when(accountRepository.updateBalanceAccount(any(), any(), any())).thenReturn(1);
 
         sut.execute(request);
 
         verify(transactionRepository, times(1)).createTransaction(any());
-        verify(accountRepository).updateBalanceAccount(foodBalanceAccount.id(), 10000 - request.amountCents());
+        verify(accountRepository).updateBalanceAccount(eq(foodBalanceAccount.id()), eq(10000 - request.amountCents()), anyInt());
+    }
+
+    @Test
+    void shouldThrowIfUpdateBalanceAccountIsNotProcessed() {
+        var request = TransactionRequestFactory.createRequestWithFoodMcc();
+        var foodMerchant = MerchantFactory.createMerchantWithFoodMcc();
+        var foodBalanceAccount = BalanceAccountFactory.createBalanceAccountWithFoodCategory(10000);
+        when(accountRepository.getAccount(request.accountId())).thenReturn(Optional.of(AccountFactory.createAccount()));
+        when(merchantRepository.getMerchantByName(request.merchantName())).thenReturn(Optional.of(foodMerchant));
+        when(accountRepository.getBalanceAccountByCategoryAndAccount(any(), any()))
+                .thenReturn(Optional.of(foodBalanceAccount));
+        doNothing().when(transactionRepository).createTransaction(any());
+        when(accountRepository.updateBalanceAccount(any(), any(), any())).thenReturn(0);
+
+        assertThrows(ConcurrencyException.class, () -> sut.execute(request));
     }
 }

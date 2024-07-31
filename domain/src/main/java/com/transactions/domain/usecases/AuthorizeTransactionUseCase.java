@@ -7,6 +7,7 @@ import com.transactions.domain.entities.Transaction;
 import com.transactions.domain.entities.enums.BalanceCategory;
 import com.transactions.domain.exceptions.AccountNotFoundException;
 import com.transactions.domain.exceptions.BalanceAccountNotFoundException;
+import com.transactions.domain.exceptions.ConcurrencyException;
 import com.transactions.domain.exceptions.InsufficientBalanceException;
 import com.transactions.domain.ports.AccountRepository;
 import com.transactions.domain.ports.MerchantRepository;
@@ -87,6 +88,10 @@ public class AuthorizeTransactionUseCase {
         transactionRepository.createTransaction(transaction);
 
         Integer newBalanceCents = balanceAccount.balanceCents() - request.amountCents();
-        accountRepository.updateBalanceAccount(balanceAccount.id(), newBalanceCents);
+        Integer rowsChanged = accountRepository.updateBalanceAccount(balanceAccount.id(), newBalanceCents, balanceAccount.lockVersion());
+
+        if (rowsChanged == 0) {
+            throw new ConcurrencyException(balanceAccount.id());
+        }
     }
 }

@@ -8,5 +8,5 @@ import java.util.Optional;
 public interface AccountRepository {
     Optional<Account> getAccount(String accountId);
     Optional<BalanceAccount> getBalanceAccountByCategoryAndAccount(String accountId, String category);
-    void updateBalanceAccount(String balanceAccountId, Integer newBalanceCents);
+    Integer updateBalanceAccount(String balanceAccountId, Integer newBalanceCents, Integer lockVersion);
 }

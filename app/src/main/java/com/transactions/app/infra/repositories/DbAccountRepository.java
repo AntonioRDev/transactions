@@ -37,10 +37,13 @@ public class DbAccountRepository implements AccountRepository {
     }
 
     @Override
-    public void updateBalanceAccount(String balanceAccountId, Integer newBalanceCents) {
-        jdbcClient.sql("UPDATE balanceaccount SET balancecents = ? WHERE id = ?")
-                .param(newBalanceCents)
-                .param(UUID.fromString(balanceAccountId))
-                .update();
+    public Integer updateBalanceAccount(String balanceAccountId, Integer newBalanceCents, Integer lockVersion) {
+        Integer newLockVersion = lockVersion + 1;
+        return jdbcClient.sql("UPDATE balanceaccount SET balancecents = ?, lockversion = ? WHERE id = ? AND lockversion = ?")
+                    .param(newBalanceCents)
+                    .param(newLockVersion)
+                    .param(UUID.fromString(balanceAccountId))
+                    .param(lockVersion)
+                    .update();
     }
 }
