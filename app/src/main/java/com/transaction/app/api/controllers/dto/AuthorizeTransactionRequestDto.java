@@ -1,14 +1,15 @@
 package com.transaction.app.api.controllers.dto;
 
 import com.transactions.domain.usecases.dto.AuthorizeTransactionRequest;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 public class AuthorizeTransactionRequestDto {
-    @NotNull
+    @NotBlank
     public String accountId;
-    @NotNull
+    @NotBlank
     public String merchantName;
-    @NotNull
+    @NotBlank
     public String mcc;
     @NotNull
     public Integer amountCents;

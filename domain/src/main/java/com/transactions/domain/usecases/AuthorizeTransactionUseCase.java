@@ -15,7 +15,10 @@ import com.transactions.domain.usecases.dto.AuthorizeTransactionRequest;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
+
+import java.time.LocalDateTime;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 @Named
@@ -41,37 +44,33 @@ public class AuthorizeTransactionUseCase {
     }
 
     public void execute(AuthorizeTransactionRequest request) {
-        Account account = accountRepository.getAccount(request.accountId());
-        if (account == null) {
-            throw new AccountNotFoundException(request.accountId());
+        Account account = accountRepository.getAccount(request.accountId())
+                .orElseThrow(() -> new AccountNotFoundException(request.accountId()));
+
+        BalanceCategory transactionCategory;
+        Optional<Merchant> merchant = this.merchantRepository.getMerchantByName(request.merchantName());
+
+        if (merchant.isPresent() && mccToCategoryMap.containsKey(merchant.get().mcc())) {
+            transactionCategory = mccToCategoryMap.get(merchant.get().mcc());
+        } else {
+            transactionCategory = mccToCategoryMap.getOrDefault(request.mcc(), BalanceCategory.CASH);
         }
 
-        BalanceCategory transactionCategory = BalanceCategory.CASH;
-        Merchant merchant = this.merchantRepository.getMerchantByName(request.merchantName());
-
-        if (merchant != null && mccToCategoryMap.containsKey(merchant.mcc())) {
-            transactionCategory = mccToCategoryMap.get(merchant.mcc());
-        } else if (mccToCategoryMap.containsKey(request.mcc())) {
-            transactionCategory = mccToCategoryMap.get(request.mcc());
-        }
-
-        BalanceAccount balanceAccount = accountRepository.getBalanceAccountByCategoryAndAccount(request.accountId(), transactionCategory.name());
-        if (balanceAccount == null) {
-            throw new BalanceAccountNotFoundException(request.accountId(), transactionCategory.name());
-        }
+        BalanceAccount balanceAccount = accountRepository
+                .getBalanceAccountByCategoryAndAccount(account.id(), transactionCategory.name())
+                .orElseThrow(() -> new BalanceAccountNotFoundException(account.id(), transactionCategory.name()));
 
         if (balanceAccount.balanceCents() < request.amountCents()) {
             if (balanceAccount.category() == BalanceCategory.CASH) {
-                throw new InsufficientBalanceException(request.accountId(), transactionCategory.name());
+                throw new InsufficientBalanceException(account.id(), transactionCategory.name());
             }
 
-            BalanceAccount cashBalanceAccount = accountRepository.getBalanceAccountByCategoryAndAccount(request.accountId(), BalanceCategory.CASH.name());
-            if (cashBalanceAccount == null) {
-                throw new InsufficientBalanceException(request.accountId(), transactionCategory.name());
-            }
+            BalanceAccount cashBalanceAccount = accountRepository
+                    .getBalanceAccountByCategoryAndAccount(account.id(), BalanceCategory.CASH.name())
+                    .orElseThrow( () -> new InsufficientBalanceException(account.id(), transactionCategory.name()));
 
             if (cashBalanceAccount.balanceCents() < request.amountCents()) {
-                throw new InsufficientBalanceException(request.accountId(), transactionCategory.name());
+                throw new InsufficientBalanceException(account.id(), transactionCategory.name());
             }
 
             balanceAccount = cashBalanceAccount;
@@ -82,7 +81,8 @@ public class AuthorizeTransactionUseCase {
                 request.accountId(),
                 request.merchantName(),
                 request.mcc(),
-                request.amountCents()
+                request.amountCents(),
+                LocalDateTime.now()
         );
         transactionRepository.createTransaction(transaction);
 

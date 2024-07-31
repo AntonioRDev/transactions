@@ -1,10 +1,12 @@
 package com.transaction.app.api.controllers;
 
+import com.transaction.app.api.controllers.dto.ApiResponse;
 import com.transaction.app.api.controllers.dto.AuthorizeTransactionRequestDto;
 import com.transactions.domain.usecases.AuthorizeTransactionUseCase;
 
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -18,7 +20,9 @@ public class TransactionController {
 
     @PostMapping("/authorize")
     @ResponseStatus(HttpStatus.OK)
-    public void authorizeTransaction(@Valid @RequestBody AuthorizeTransactionRequestDto request) {
+    @Transactional
+    public ApiResponse authorizeTransaction(@Valid @RequestBody AuthorizeTransactionRequestDto request) {
         authorizeTransactionUseCase.execute(AuthorizeTransactionRequestDto.toDomainRequest(request));
+        return new ApiResponse("00");
     }
 }

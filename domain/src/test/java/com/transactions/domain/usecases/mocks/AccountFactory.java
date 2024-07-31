@@ -8,8 +8,7 @@ public class AccountFactory {
     public static Account createAccount() {
         return new Account(
             "1",
-            "John Doe",
-            new ArrayList<>()
+            "John Doe"
         );
     }
 }

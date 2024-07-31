@@ -2,6 +2,8 @@ package com.transactions.domain.ports;
 
 import com.transactions.domain.entities.Merchant;
 
+import java.util.Optional;
+
 public interface MerchantRepository {
-    Merchant getMerchantByName(String name);
+    Optional<Merchant> getMerchantByName(String name);
 }

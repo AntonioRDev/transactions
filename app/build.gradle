@@ -14,8 +14,14 @@ dependencies {
     // Domain
     implementation project(':domain')
 
-    // Spring Web
+    // Spring
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+    implementation 'org.springframework.boot:spring-boot-docker-compose'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+    // Postgresql driver
+    implementation 'org.postgresql:postgresql:42.7.3'
 
     // Swagger
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0'
