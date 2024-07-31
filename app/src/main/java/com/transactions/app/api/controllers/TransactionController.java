@@ -1,7 +1,7 @@
-package com.transaction.app.api.controllers;
+package com.transactions.app.api.controllers;
 
-import com.transaction.app.api.controllers.dto.ApiResponse;
-import com.transaction.app.api.controllers.dto.AuthorizeTransactionRequestDto;
+import com.transactions.app.api.controllers.dto.ApiResponse;
+import com.transactions.app.api.controllers.dto.AuthorizeTransactionRequestDto;
 import com.transactions.domain.usecases.AuthorizeTransactionUseCase;
 
 import jakarta.validation.Valid;

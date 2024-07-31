@@ -1,4 +1,4 @@
-package com.transaction.app.api.controllers.dto;
+package com.transactions.app.api.controllers.dto;
 
 import com.transactions.domain.usecases.dto.AuthorizeTransactionRequest;
 import jakarta.validation.constraints.NotBlank;

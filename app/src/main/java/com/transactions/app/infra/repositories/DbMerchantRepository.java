@@ -1,4 +1,4 @@
-package com.transaction.app.infra.repositories;
+package com.transactions.app.infra.repositories;
 
 import com.transactions.domain.entities.Merchant;
 import com.transactions.domain.ports.MerchantRepository;

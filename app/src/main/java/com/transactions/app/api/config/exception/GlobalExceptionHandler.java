@@ -1,6 +1,6 @@
-package com.transaction.app.api.config.exception;
+package com.transactions.app.api.config.exception;
 
-import com.transaction.app.api.controllers.dto.ApiResponse;
+import com.transactions.app.api.controllers.dto.ApiResponse;
 import com.transactions.domain.exceptions.DomainException;
 import com.transactions.domain.exceptions.InsufficientBalanceException;
 
